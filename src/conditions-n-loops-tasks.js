@@ -485,8 +485,62 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+
+/** This monster works and this is a miracle!
+ * TODO: check properly how it works */
+function shuffleChar(str, iterations) {
+  const len = str.length;
+  if (len <= 1 || iterations <= 0) {
+    return str;
+  }
+  const perm = new Array(len);
+  const evenCount = Math.ceil(len / 2);
+  for (let i = 0; i < len; i += 1) {
+    if (i % 2 === 0) {
+      perm[i] = Math.floor(i / 2);
+    } else {
+      perm[i] = evenCount + Math.floor((i - 1) / 2);
+    }
+  }
+  const resultPerm = new Array(len);
+  for (let i = 0; i < len; i += 1) {
+    resultPerm[i] = i;
+  }
+  const base = new Array(len);
+  for (let i = 0; i < len; i += 1) {
+    base[i] = perm[i];
+  }
+  const temp = new Array(len);
+  let pow = iterations;
+  while (pow > 0) {
+    if (pow % 2 === 1) {
+      for (let i = 0; i < len; i += 1) {
+        temp[i] = base[resultPerm[i]];
+      }
+      for (let i = 0; i < len; i += 1) {
+        resultPerm[i] = temp[i];
+      }
+    }
+    if (pow > 1) {
+      for (let i = 0; i < len; i += 1) {
+        temp[i] = base[base[i]];
+      }
+      for (let i = 0; i < len; i += 1) {
+        base[i] = temp[i];
+      }
+    }
+    pow = Math.floor(pow / 2);
+  }
+  const chars = new Array(len);
+  for (let i = 0; i < len; i += 1) {
+    const newIndex = resultPerm[i];
+    chars[newIndex] = str.charAt(i);
+  }
+  let result = '';
+  for (let i = 0; i < len; i += 1) {
+    result += chars[i];
+  }
+  return result;
 }
 
 /**
